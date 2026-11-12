@@ -18,3 +18,96 @@
 .toggle-graph:focus svg path {
     fill: black;
 }
+
+/* Search toolbar, sitting between the "new todo" field and the todo list. */
+.search-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 14px;
+    line-height: 1.4em;
+    color: #4d4d4d;
+}
+
+.search-label {
+    font-weight: 400;
+    color: #777;
+}
+
+.search-input {
+    flex: 1 1 140px;
+    min-width: 0;
+    margin: 0;
+    padding: 6px 8px;
+    font: inherit;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.search-clear {
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.search-clear:hover:not(:disabled),
+.search-clear:focus:not(:disabled) {
+    border-color: #db7676;
+}
+
+.search-clear:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.search-status {
+    flex: 1 0 100%;
+    margin: 4px 0 0;
+    color: #777;
+}
+
+/* Collapse, but keep rendering, the live region while it has nothing to say. */
+.search-status:empty {
+    margin: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.search-status--empty {
+    color: #b83f45;
+}
+
+@media (max-width: 430px) {
+    .search-toolbar {
+        padding: 8px 10px;
+    }
+
+    .search-label {
+        flex: 1 0 100%;
+    }
+
+    .search-input {
+        flex: 1 1 auto;
+    }
+}
+
+/* Anchor the bulk toggle to the entry field, above the search toolbar. */
+.header {
+    position: relative;
+}
+.header .toggle-all + label {
+    top: 0;
+}
+.header .toggle-all-container {
+    position: relative;
+    z-index: 1;
+}

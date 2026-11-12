@@ -1,0 +1,22 @@
+PASS no query shows all
+PASS no query leaves the status empty
+PASS case-insensitive substring match
+PASS result count
+PASS query is trimmed for matching
+PASS trimmed query is echoed
+PASS no matches empties the list
+PASS no matches feedback
+PASS query survives a status switch
+PASS completing refreshes the results
+PASS count is scoped to the status filter
+PASS completed composed with the query
+PASS singular total wording
+PASS adding refreshes the results
+PASS global counts ignore the query
+PASS edited title that stops matching drops out
+PASS deleting refreshes the results
+PASS toggle-all stays global
+PASS clear-completed stays global
+PASS feedback after everything is gone
+PASS clear search empties the box
+PASS clear search empties the feedback

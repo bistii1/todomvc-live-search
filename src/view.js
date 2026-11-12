@@ -82,13 +82,35 @@ export default class View {
         this.$todoItemCounter = qs(".todo-count");
         this.$clearCompleted = qs(".clear-completed");
         this.$main = qs(".main");
+        this.$toggleAllContainer = qs(".toggle-all-container");
         this.$footer = qs(".footer");
         this.$toggleAllInput = qs(".toggle-all");
         this.$toggleAll = qs(".toggle-all-label");
         this.$newTodo = qs(".new-todo");
+        this.$search = qs(".search-input");
+        this.$searchClear = qs(".search-clear");
+        this.$searchStatus = qs(".search-status");
 
         this.render = this.render.bind(this);
         this.bindCallback = this.bindCallback.bind(this);
+    }
+
+    /**
+     * Reports the search results in the live region next to the search box.
+     * textContent is used on purpose: the query is user input and is echoed
+     * back verbatim.
+     */
+    _searchFeedback(query, matched, total) {
+        const noMatches = query !== "" && matched === 0;
+
+        this.$searchClear.disabled = this.$search.value === "";
+        this.$searchStatus.classList.toggle("search-status--empty", noMatches);
+        this.$searchStatus.textContent = this.template.searchStatus(query, matched, total);
+    }
+
+    _clearSearch() {
+        this.$search.value = "";
+        this.$search.focus();
     }
 
     _clearCompletedButton(completedCount, visible) {
@@ -106,7 +128,7 @@ export default class View {
                 this.$todoItemCounter.innerHTML = this.template.itemCounter(parameter);
                 break;
             case "contentBlockVisibility":
-                this.$main.style.display = this.$footer.style.display = parameter.visible ? "block" : "none";
+                this.$main.style.display = this.$footer.style.display = this.$toggleAllContainer.style.display = parameter.visible ? "block" : "none";
                 break;
             case "toggleAll":
                 this.$toggleAllInput.checked = parameter.checked;
@@ -129,6 +151,12 @@ export default class View {
             case "editItemDone":
                 _editItemDone(parameter.id, parameter.title);
                 break;
+            case "searchFeedback":
+                this._searchFeedback(parameter.query, parameter.matched, parameter.total);
+                break;
+            case "clearSearch":
+                this._clearSearch();
+                break;
             case "clearCompletedButton":
                 this._clearCompletedButton(parameter.completed, parameter.visible, this.clearCompletedButton);
                 break;
@@ -139,6 +167,16 @@ export default class View {
         switch (event) {
             case "newTodo":
                 $on(this.$newTodo, "change", () => handler(this.$newTodo.value));
+                break;
+            case "searchInput":
+                $on(this.$search, "input", () => handler(this.$search.value));
+                break;
+            case "searchClear":
+                $on(this.$searchClear, "click", () => handler());
+                $on(this.$search, "keyup", (e) => {
+                    if (e.keyCode === ESCAPE_KEY)
+                        handler();
+                });
                 break;
             case "removeCompleted":
                 $on(this.$clearCompleted, "click", handler);

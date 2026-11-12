@@ -71,6 +71,28 @@ class Template {
     }
 
     /**
+     * Describes the outcome of the current search query.
+     *
+     * NOTE: The result is plain text, not HTML: the view writes it with
+     * textContent, so the query is echoed back without any escaping.
+     *
+     * @param {string} query The trimmed search query ("" when not searching)
+     * @param {number} matched The number of todos matching the query
+     * @param {number} total The number of todos in the current status filter
+     * @returns {string} String describing the search results
+     */
+    searchStatus(query, matched, total) {
+        if (query === "")
+            return "";
+
+        if (matched === 0)
+            return `No tasks match "${query}"`;
+
+        const plural = total === 1 ? "task" : "tasks";
+        return `Showing ${matched} of ${total} ${plural} matching "${query}"`;
+    }
+
+    /**
      * Updates the text within the "Clear completed" button
      *
      * @param  {[type]} completedTodos The number of completed todos.

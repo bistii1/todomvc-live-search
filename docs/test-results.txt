@@ -1,0 +1,18 @@
+PASS: Create and complete tasks
+PASS: Trimmed, case-insensitive substring search
+PASS: Search composes with Active and preserves query
+PASS: Search composes with Completed
+PASS: No-match feedback
+PASS: Escape clears query
+PASS: Clear search button
+PASS: New tasks respect current query
+PASS: Editing a title removes a nonmatching result
+PASS: Completion refreshes composed search
+PASS: Deletion refreshes results
+PASS: Clear completed retains global semantics during search
+PASS: Toggle all retains global semantics during search
+PASS: Special-character query is treated as text
+PASS: Mobile layout fits 390-pixel viewport
+PASS: Search remains usable after deleting the last task
+PASS: Whitespace-only query can be cleared by button
+PASS: No uncaught browser errors

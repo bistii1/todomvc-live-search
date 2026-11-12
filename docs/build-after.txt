@@ -1,0 +1,40 @@
+
+> todomvc-javascript-es6-webpack@1.0.0 build
+> webpack --config webpack.prod.js
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+assets by path *.js 13.4 KiB
+  asset app.bundle.js 9.7 KiB [compared for emit] [minimized] (name: app) 1 related asset
+  asset base.js 3.67 KiB [compared for emit] [from: node_modules/todomvc-common/base.js] [copied] [minimized]
+asset app.css 8.21 KiB [emitted] [minimized] (name: app) 1 related asset
+asset index.html 1.66 KiB [compared for emit]
+Entrypoint app 17.9 KiB (60 KiB) = app.css 8.21 KiB app.bundle.js 9.7 KiB 2 auxiliary assets
+orphan modules 62.8 KiB (javascript) 2.78 KiB (runtime) [orphan] 30 modules
+cacheable modules 29.2 KiB (javascript) 10.8 KiB (css/mini-extract)
+  modules by path ./src/ 29.2 KiB (javascript) 1.93 KiB (css/mini-extract)
+    ./src/app.js + 6 modules 29.2 KiB [built] [code generated]
+    css ./node_modules/css-loader/dist/cjs.js!./src/app.css 1.93 KiB [built] [code generated]
+  modules by path ./node_modules/ 8.88 KiB
+    css ./node_modules/css-loader/dist/cjs.js!./node_modules/todomvc-app-css/index.css 7.1 KiB [built] [code generated]
+    css ./node_modules/css-loader/dist/cjs.js!./node_modules/todomvc-common/base.css 1.78 KiB [built] [code generated]
+webpack 5.89.0 compiled successfully in 757 ms
+        1.29 real         1.11 user         0.18 sys
+           211517440  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21878  page reclaims
+                  21  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                3019  voluntary context switches
+                3828  involuntary context switches
+           717698116  instructions retired
+           279597024  cycles elapsed
+            23628656  peak memory footprint

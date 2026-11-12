@@ -8,7 +8,12 @@ class Controller {
         this.model = model;
         this.view = view;
 
+        // The raw search query, as typed. It is trimmed when matching.
+        this._searchQuery = "";
+
         this.view.bindCallback("newTodo", (title) => this.addItem(title));
+        this.view.bindCallback("searchInput", (query) => this.search(query));
+        this.view.bindCallback("searchClear", () => this.clearSearch());
         this.view.bindCallback("itemEdit", (item) => this.editItem(item.id));
         this.view.bindCallback("itemEditDone", (item) => this.editItemSave(item.id, item.title));
         this.view.bindCallback("itemEditCancel", (item) => this.editItemCancel(item.id));
@@ -32,21 +37,42 @@ class Controller {
      * Event fires on load. Gets all items & displays them
      */
     showAll() {
-        this.model.read((data) => this.view.render("showEntries", data));
+        this.model.read((data) => this._showEntries(data));
     }
 
     /**
      * Renders all active tasks
      */
     showActive() {
-        this.model.read({ completed: false }, (data) => this.view.render("showEntries", data));
+        this.model.read({ completed: false }, (data) => this._showEntries(data));
     }
 
     /**
      * Renders all completed tasks
      */
     showCompleted() {
-        this.model.read({ completed: true }, (data) => this.view.render("showEntries", data));
+        this.model.read({ completed: true }, (data) => this._showEntries(data));
+    }
+
+    /**
+     * Stores the current search query and repaints the matching tasks.
+     * The active status filter (All | Active | Completed) is left untouched,
+     * so both filters apply at the same time.
+     *
+     * @param {string} query The query as typed in the search box
+     */
+    search(query) {
+        this._searchQuery = query;
+        this._filter(true);
+    }
+
+    /**
+     * Empties the search box and shows every task of the active status filter.
+     */
+    clearSearch() {
+        this._searchQuery = "";
+        this.view.render("clearSearch");
+        this._filter(true);
     }
 
     /**
@@ -82,6 +108,8 @@ class Controller {
         if (title.length !== 0) {
             this.model.update(id, { title }, () => {
                 this.view.render("editItemDone", { id, title });
+                // The new title may no longer match the active search query.
+                this._refreshSearch();
             });
         } else {
             this.removeItem(id);
@@ -151,6 +179,41 @@ class Controller {
     }
 
     /**
+     * The query used for matching: trimmed and lowercased.
+     * @returns {string} The normalized query, "" when not searching
+     */
+    _searchTerm() {
+        return this._searchQuery.trim().toLowerCase();
+    }
+
+    /**
+     * Renders the tasks of the active status filter whose title contains the
+     * search query, plus the feedback describing the result.
+     *
+     * @param {array} data The tasks of the active status filter
+     */
+    _showEntries(data) {
+        const term = this._searchTerm();
+        const matches = term === "" ? data : data.filter((todo) => todo.title.toLowerCase().includes(term));
+
+        this.view.render("showEntries", matches);
+        this.view.render("searchFeedback", {
+            query: this._searchQuery.trim(),
+            matched: matches.length,
+            total: data.length,
+        });
+    }
+
+    /**
+     * Repaints the list when a search is running, so results stay in sync with
+     * changes that do not repaint the list on their own.
+     */
+    _refreshSearch() {
+        if (this._searchTerm() !== "")
+            this._filter(true);
+    }
+
+    /**
      * Updates the pieces of the page which change depending on the remaining
      * number of todos.
      */
@@ -181,7 +244,9 @@ class Controller {
         // If the last active route isn't "All", or we're switching routes, we
         // re-create the todo item elements, calling:
         //   this.show[All|Active|Completed]()
-        if (force || this._lastActiveRoute !== "All" || this._lastActiveRoute !== activeRoute)
+        // A running search also repaints, since adding, deleting or completing
+        // a task changes which titles are shown and the result count.
+        if (force || this._searchTerm() !== "" || this._lastActiveRoute !== "All" || this._lastActiveRoute !== activeRoute)
             this[`show${activeRoute}`]();
 
         this._lastActiveRoute = activeRoute;
